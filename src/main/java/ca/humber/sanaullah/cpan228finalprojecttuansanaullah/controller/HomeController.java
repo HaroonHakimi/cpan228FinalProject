@@ -4,11 +4,11 @@ import ca.humber.sanaullah.cpan228finalprojecttuansanaullah.model.Dish;
 import ca.humber.sanaullah.cpan228finalprojecttuansanaullah.service.DishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,16 +29,24 @@ public class HomeController {
     @GetMapping("/menu")
     public String menu(@RequestParam(required = false) String name,
                        @RequestParam(required = false) String category,
+                       @RequestParam(defaultValue = "0") int page,
+                       @RequestParam(defaultValue = "6") int size,
+                       @RequestParam(defaultValue = "id") String sortBy,
+                       @RequestParam(defaultValue = "asc") String sortDir,
                        Model model) {
-        List<Dish> dishes;
 
-        if ((name != null && !name.isEmpty()) || (category != null && !category.isEmpty())) {
-            dishes = dishService.searchDishes(name, category);
-        } else {
-            dishes = dishService.getDishes();
-        }
+        Page<Dish> dishPage = dishService.searchDishes(name, category, page, size, sortBy, sortDir);
 
-        model.addAttribute("dishes", dishes);
+        model.addAttribute("dishes", dishPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", dishPage.getTotalPages());
+        model.addAttribute("totalItems", dishPage.getTotalElements());
+        model.addAttribute("sortBy", sortBy);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("name", name);
+        model.addAttribute("category", category);
+
         return "menu";
     }
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,24 +22,46 @@
             <h5 class="card-title">Search & Filter</h5>
             <form method="get" action="/menu">
                 <div class="row">
-                    <div class="col-md-5">
-                        <input type="text" class="form-control" name="name" placeholder="Search by dish name" th:value="${param.name}">
-                    </div>
                     <div class="col-md-4">
+                        <input type="text" class="form-control" name="name" placeholder="Search by dish name" th:value="${name}">
+                    </div>
+                    <div class="col-md-3">
                         <select class="form-select" name="category">
                             <option value="">All Categories</option>
-                            <option value="Appetizer" th:selected="${param.category == 'Appetizer'}">Appetizer</option>
-                            <option value="Main Course" th:selected="${param.category == 'Main Course'}">Main Course</option>
-                            <option value="Dessert" th:selected="${param.category == 'Dessert'}">Dessert</option>
-                            <option value="Side" th:selected="${param.category == 'Side'}">Side</option>
-                            <option value="Beverage" th:selected="${param.category == 'Beverage'}">Beverage</option>
+                            <option value="Appetizer" th:selected="${category == 'Appetizer'}">Appetizer</option>
+                            <option value="Main Course" th:selected="${category == 'Main Course'}">Main Course</option>
+                            <option value="Dessert" th:selected="${category == 'Dessert'}">Dessert</option>
+                            <option value="Side" th:selected="${category == 'Side'}">Side</option>
+                            <option value="Beverage" th:selected="${category == 'Beverage'}">Beverage</option>
                         </select>
                     </div>
                     <div class="col-md-3">
+                        <select class="form-select" name="sortBy">
+                            <option value="id" th:selected="${sortBy == 'id'}">Sort by ID</option>
+                            <option value="name" th:selected="${sortBy == 'name'}">Sort by Name</option>
+                            <option value="price" th:selected="${sortBy == 'price'}">Sort by Price</option>
+                            <option value="category" th:selected="${sortBy == 'category'}">Sort by Category</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
                         <button type="submit" class="btn btn-primary w-100">Search</button>
                     </div>
                 </div>
+                <input type="hidden" name="sortDir" th:value="${sortDir}">
             </form>
+        </div>
+    </div>
+
+    <!-- Sorting Controls -->
+    <div class="mb-3 d-flex justify-content-between align-items-center">
+        <div>
+            <span th:text="'Showing ' + ${dishes.size()} + ' of ' + ${totalItems} + ' dishes'"></span>
+        </div>
+        <div>
+            <a th:href="@{/menu(page=${currentPage}, size=6, sortBy=${sortBy}, sortDir=${reverseSortDir}, name=${name}, category=${category})}"
+               class="btn btn-sm btn-outline-secondary">
+                <span th:text="${sortDir == 'asc' ? '↑ Ascending' : '↓ Descending'}"></span>
+            </a>
         </div>
     </div>
 
@@ -54,7 +77,7 @@
                     <p class="card-text">
                         <strong>Price: $<span th:text="${dish.price}">0.00</span></strong>
                     </p>
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2" sec:authorize="hasRole('ADMIN')">
                         <a th:href="@{/edit-dish/{id}(id=${dish.id})}" class="btn btn-warning btn-sm">Edit</a>
                         <a th:href="@{/delete-dish/{id}(id=${dish.id})}"
                            class="btn btn-danger btn-sm"
@@ -69,6 +92,33 @@
     <div th:if="${#lists.isEmpty(dishes)}" class="alert alert-info text-center">
         No dishes found. Try adjusting your search criteria.
     </div>
+
+    <!-- Pagination -->
+    <nav th:if="${totalPages > 1}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/menu(page=${currentPage - 1}, size=6, sortBy=${sortBy}, sortDir=${sortDir}, name=${name}, category=${category})}">
+                    Previous
+                </a>
+            </li>
+
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link"
+                   th:href="@{/menu(page=${i}, size=6, sortBy=${sortBy}, sortDir=${sortDir}, name=${name}, category=${category})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+
+            <li class="page-item" th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'">
+                <a class="page-link"
+                   th:href="@{/menu(page=${currentPage + 1}, size=6, sortBy=${sortBy}, sortDir=${sortDir}, name=${name}, category=${category})}">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 
 <!-- Footer -->
