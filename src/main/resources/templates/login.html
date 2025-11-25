@@ -5,47 +5,208 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Restaurant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            padding: 30px 0;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-header h2 {
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .login-header i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .login-body {
+            padding: 40px;
+        }
+
+        .form-control {
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .alert {
+            border-radius: 15px;
+            border: none;
+            padding: 15px 20px;
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #fc6076 0%, #ff9a44 100%);
+            color: white;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .login-links {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .login-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-group-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        .form-control-icon {
+            padding-left: 50px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container mt-5">
+<div class="login-container container">
     <div class="row justify-content-center">
         <div class="col-md-5">
-            <div class="card">
-                <div class="card-body">
-                    <h2 class="card-title text-center mb-4">Login</h2>
+            <div class="login-card">
+                <div class="login-header">
+                    <i class="bi bi-person-circle"></i>
+                    <h2>Welcome Back</h2>
+                    <p class="mb-0">Login to your account</p>
+                </div>
 
-                    <div th:if="${param.registered}" class="alert alert-success">
-                        Registration successful! Please login.
+                <div class="login-body">
+                    <div th:if="${param.registered}" class="alert alert-success mb-3">
+                        <i class="bi bi-check-circle"></i> Registration successful! Please login.
                     </div>
 
-                    <div th:if="${param.error}" class="alert alert-danger">
-                        Invalid username or password.
+                    <div th:if="${param.error}" class="alert alert-danger mb-3">
+                        <i class="bi bi-exclamation-triangle"></i> Invalid username or password.
                     </div>
 
-                    <div th:if="${param.logout}" class="alert alert-info">
-                        You have been logged out.
+                    <div th:if="${param.logout}" class="alert alert-info mb-3">
+                        <i class="bi bi-info-circle"></i> You have been logged out.
                     </div>
 
                     <form th:action="@{/login}" method="post">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="mb-4">
+                            <label for="username" class="form-label">
+                                <i class="bi bi-person"></i> Username
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="bi bi-person-fill input-group-icon"></i>
+                                <input type="text" class="form-control form-control-icon" id="username" name="username" placeholder="Enter your username" required>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                        <div class="mb-4">
+                            <label for="password" class="form-label">
+                                <i class="bi bi-lock"></i> Password
+                            </label>
+                            <div class="input-wrapper">
+                                <i class="bi bi-lock-fill input-group-icon"></i>
+                                <input type="password" class="form-control form-control-icon" id="password" name="password" placeholder="Enter your password" required>
+                            </div>
                         </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Login</button>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </button>
                         </div>
                     </form>
 
-                    <div class="text-center mt-3">
-                        <p>Don't have an account? <a th:href="@{/register}">Register here</a></p>
-                        <p><a th:href="@{/}">Back to Home</a></p>
+                    <div class="login-links">
+                        <p class="mb-2">Don't have an account? <a th:href="@{/register}">Register here</a></p>
+                        <p><a th:href="@{/}"><i class="bi bi-house-door"></i> Back to Home</a></p>
                     </div>
                 </div>
             </div>

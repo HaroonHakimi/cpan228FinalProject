@@ -5,6 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Dish - Restaurant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: slideUp 0.5s ease;
+        }
+
+        .form-control, .form-select {
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #f5576c;
+            box-shadow: 0 0 0 0.2rem rgba(245, 87, 108, 0.25);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #868f96 0%, #596164 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(89, 97, 100, 0.4);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-group-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #f5576c;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+
+        .form-control-icon {
+            padding-left: 50px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+    </style>
 </head>
 <body>
 
@@ -12,41 +116,64 @@
 <div th:replace="~{fragments :: header}"></div>
 
 <!-- Main Content -->
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
+    <h1 class="page-title">
+        <i class="bi bi-pencil-square"></i> Edit Dish
+    </h1>
+
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center mb-4">Edit Dish</h2>
+        <div class="col-md-7">
+            <div class="form-card">
+                <form th:action="@{/edit-dish}" th:object="${dish}" method="post">
+                    <input type="hidden" th:field="*{id}">
 
-            <form th:action="@{/edit-dish}" th:object="${dish}" method="post">
-                <input type="hidden" th:field="*{id}">
+                    <div class="mb-4">
+                        <label for="name" class="form-label">
+                            <i class="bi bi-card-text"></i> Dish Name
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-card-text input-group-icon"></i>
+                            <input type="text" class="form-control form-control-icon" id="name" th:field="*{name}" required>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="name" class="form-label">Dish Name</label>
-                    <input type="text" class="form-control" id="name" th:field="*{name}" required>
-                </div>
+                    <div class="mb-4">
+                        <label for="category" class="form-label">
+                            <i class="bi bi-tag"></i> Category
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-tag-fill input-group-icon"></i>
+                            <select class="form-select form-control-icon" id="category" th:field="*{category}" required>
+                                <option value="">Select Category</option>
+                                <option value="Appetizer">🍤 Appetizer</option>
+                                <option value="Main Course">🍽️ Main Course</option>
+                                <option value="Dessert">🍰 Dessert</option>
+                                <option value="Side">🍟 Side</option>
+                                <option value="Beverage">🥤 Beverage</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select class="form-select" id="category" th:field="*{category}" required>
-                        <option value="">Select Category</option>
-                        <option value="Appetizer">Appetizer</option>
-                        <option value="Main Course">Main Course</option>
-                        <option value="Dessert">Dessert</option>
-                        <option value="Side">Side</option>
-                        <option value="Beverage">Beverage</option>
-                    </select>
-                </div>
+                    <div class="mb-4">
+                        <label for="price" class="form-label">
+                            <i class="bi bi-currency-dollar"></i> Price
+                        </label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-currency-dollar input-group-icon"></i>
+                            <input type="number" step="0.01" class="form-control form-control-icon" id="price" th:field="*{price}" required>
+                        </div>
+                    </div>
 
-                <div class="mb-3">
-                    <label for="price" class="form-label">Price ($)</label>
-                    <input type="number" step="0.01" class="form-control" id="price" th:field="*{price}" required>
-                </div>
-
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-success">Update Dish</button>
-                    <a href="/menu" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
+                    <div class="d-grid gap-3">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Update Dish
+                        </button>
+                        <a href="/menu" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

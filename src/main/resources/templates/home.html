@@ -6,28 +6,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Restaurant</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #d3d3d3;
+            min-height: 100vh;
+        }
+
+        .hero-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            animation: fadeIn 1.2s ease;
+        }
+
+        .btn-hero {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-hero:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .features-section {
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
 
 <!-- Header -->
 <div th:replace="~{fragments :: header}"></div>
 
-<!-- Main Content -->
-<div class="container mt-5">
-    <div class="text-center">
-        <h1 class="display-4" th:text="${restaurantName}">Restaurant Name</h1>
-        <p class="lead mt-3">Welcome to our restaurant!</p>
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="container">
+        <div class="welcome-card">
+            <h1 class="hero-title" th:text="${restaurantName}">Restaurant Name</h1>
+            <p class="hero-subtitle">Experience culinary excellence with every dish</p>
 
-        <div sec:authorize="isAuthenticated()">
-            <p>Welcome, <span sec:authentication="name">User</span>!</p>
-            <a href="/menu" class="btn btn-primary btn-lg mt-3">View Menu</a>
+            <div sec:authorize="isAuthenticated()">
+                <p class="lead mb-4">
+                    <i class="bi bi-person-check-fill text-success"></i>
+                    Welcome back, <strong><span sec:authentication="name">User</span></strong>!
+                </p>
+                <a href="/menu" class="btn btn-primary btn-hero">
+                    <i class="bi bi-book"></i> View Our Menu
+                </a>
+            </div>
+
+            <div sec:authorize="!isAuthenticated()">
+                <p class="lead mb-4">Please login to explore our delicious menu</p>
+                <div>
+                    <a href="/login" class="btn btn-primary btn-hero me-3">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                    <a href="/register" class="btn btn-success btn-hero">
+                        <i class="bi bi-person-plus"></i> Register
+                    </a>
+                </div>
+            </div>
         </div>
 
-        <div sec:authorize="!isAuthenticated()">
-            <p class="mt-3">Please login to view our menu</p>
-            <div class="mt-3">
-                <a href="/login" class="btn btn-primary btn-lg me-2">Login</a>
-                <a href="/register" class="btn btn-success btn-lg">Register</a>
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <i class="bi bi-book feature-icon"></i>
+                        <h4>Diverse Menu</h4>
+                        <p>Explore a wide variety of delicious dishes from appetizers to desserts</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <i class="bi bi-search feature-icon"></i>
+                        <h4>Easy Search</h4>
+                        <p>Find your favorite dishes quickly with our advanced search and filters</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <i class="bi bi-star-fill feature-icon"></i>
+                        <h4>Quality Food</h4>
+                        <p>Enjoy high-quality ingredients and expertly crafted recipes</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
